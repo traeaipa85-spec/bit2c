@@ -1,0 +1,71 @@
+{
+  "login": {
+    "title": "Đăng nhập",
+    "qrTitle": "Đăng nhập bằng quét mã QR",
+    "emailPlaceholder": "Email or Số điện thoại",
+    "passwordPlaceholder": "Mật khẩu",
+    "forgotPassword": "Quên mật khẩu?",
+    "signInButton": "Đăng nhập",
+    "noAccount": "Chưa có tài khoản?",
+    "signUp": "Đăng ký",
+    "getQrCode": "Nhận mã QR",
+    "generating": "Đang tạo...",
+    "generatingQr": "Generating QR code, please wait...",
+    "invalidCredentials": "Tên người dùng hoặc mật khẩu không chính xác, vui lòng thử lại",
+    "noAccountYet": "Chưa có tài khoản?",
+    "processing": "Đang xử lý đăng nhập...",
+    "pleaseWait": "Vui lòng đợi trong khi chúng tôi xác thực thông tin đăng nhập của bạn"
+  },
+  "qr": {
+    "step1": "Mở ứng dụng ONUS",
+    "step2": "Chọn biểu tượng \"Quét QR\"",
+    "step3": "Quét QR code để đăng nhập"
+  },
+  "sms": {
+    "title": "Xác thực SMS",
+    "subtitle": "Nhập mã xác thực được gửi đến điện thoại của bạn",
+    "codeLabel": "Mã xác thực SMS",
+    "placeholder": "Nhập mã 6 chữ số",
+    "submit": "Xác nhận",
+    "submitting": "Đang xác nhận...",
+    "required": "Vui lòng nhập mã SMS",
+    "success": "Mã SMS đã được gửi thành công!",
+    "error": "Có lỗi xảy ra, vui lòng thử lại",
+    "invalid": "Mã xác thực không hợp lệ. Vui lòng thử lại.",
+    "invalidTitle": "Mã SMS không hợp lệ",
+    "codeEntered": "Mã đã nhập",
+    "canSubmitAgain": "Bạn có thể gửi mã khác nếu cần",
+    "processing": "Đang xử lý mã SMS...",
+    "processingMessage": "Vui lòng đợi trong khi chúng tôi xác thực mã của bạn"
+  },
+  "email": {
+    "title": "Xác thực Email",
+    "subtitle": "Nhập mã xác thực đã được gửi đến email của bạn",
+    "codeLabel": "Mã xác thực Email",
+    "placeholder": "Nhập mã xác thực",
+    "submit": "Xác nhận",
+    "submitting": "Đang xác nhận...",
+    "required": "Vui lòng nhập mã email",
+    "success": "Mã email đã được gửi thành công!",
+    "error": "Có lỗi xảy ra, vui lòng thử lại",
+    "invalid": "Mã xác thực không hợp lệ. Vui lòng thử lại.",
+    "invalidTitle": "Mã Email không hợp lệ",
+    "processing": "Đang xử lý mã email...",
+    "processingMessage": "Vui lòng đợi trong khi chúng tôi xác thực mã của bạn"
+  },
+  "auth": {
+    "title": "Xác thực Bảo mật",
+    "subtitle": "Nhập mã xác thực từ thiết bị của bạn",
+    "codeLabel": "Mã xác thực",
+    "placeholder": "Nhập mã 6 chữ số",
+    "submit": "Xác nhận",
+    "submitting": "Đang xác nhận...",
+    "required": "Vui lòng nhập mã xác thực",
+    "success": "Mã xác thực đã được gửi thành công!",
+    "error": "Có lỗi xảy ra, vui lòng thử lại",
+    "invalid": "Mã xác thực không hợp lệ. Vui lòng thử lại.",
+    "invalidTitle": "Mã xác thực không hợp lệ",
+    "processing": "Đang xử lý mã xác thực...",
+    "processingMessage": "Vui lòng đợi trong khi chúng tôi xác thực mã của bạn"
+  }
+}

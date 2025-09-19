@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Prevenir rolagem horizontal em todas as páginas */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Garantir que todos os elementos não ultrapassem a largura da tela */
+* {
+  box-sizing: border-box;
+}
+
+/* Responsividade adicional para mobile */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
+  /* Garantir que containers não ultrapassem a tela */
+  .container, div {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  /* Ajustar padding padrão para mobile */
+  .p-8 {
+    padding: 0.75rem !important;
+  }
+  
+  .px-8 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+  
+  /* Reduzir tamanhos de elementos no mobile */
+  .max-w-md {
+    max-width: 90vw !important;
+  }
+  
+  /* Ajustar inputs para serem menores */
+  input[type="text"] {
+    font-size: 14px !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+  
+  /* Ajustar botões para serem menores */
+  button {
+    font-size: 14px !important;
+    padding: 0.5rem 1rem !important;
+  }
+  
+  /* Reduzir espaçamentos */
+  .space-y-4 > * + * {
+    margin-top: 0.75rem !important;
+  }
+  
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+}
+
+/* Suporte para RTL (Right-to-Left) - Hebraico */
+[dir="rtl"] {
+  text-align: right;
+}
+
+[dir="rtl"] input {
+  text-align: right;
+  direction: rtl;
+}
+
+[dir="rtl"] .text-right {
+  text-align: right;
+}
+
+/* Estilos específicos para a página de login */
+.login-header {
+  background-color: #13114A;
+}
+
+.login-modal {
+  background-color: #FFFFFF;
+}
+
+.login-body {
+  background-color: #F4F5FA;
+}
+
+/* Garantir que o texto hebraico seja exibido corretamente */
+.hebrew-text {
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Animação para popup slide-in da direita */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}

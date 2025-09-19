@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  bit2c-app:
+    build: .
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - bit2c-network
+
+networks:
+  bit2c-network:
+    driver: bridge

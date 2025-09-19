@@ -1,0 +1,71 @@
+{
+  "login": {
+    "title": "Sign In",
+    "qrTitle": "Login via Scan QR Code",
+    "emailPlaceholder": "Email or phone number",
+    "passwordPlaceholder": "Password",
+    "forgotPassword": "Forgot Password?",
+    "signInButton": "Sign In",
+    "noAccount": "Don't have an account yet?",
+    "signUp": "Sign Up",
+    "getQrCode": "Get QR code",
+    "generating": "Generating...",
+    "generatingQr": "Generating QR code, please wait...",
+    "invalidCredentials": "The username or password is incorrect, please try again",
+    "noAccountYet": "Don't have an account yet?",
+    "processing": "Processing your login...",
+    "pleaseWait": "Please wait while we authenticate your credentials"
+  },
+  "qr": {
+    "step1": "Open App ONUS",
+    "step2": "Select Icon \"Scan QR\"",
+    "step3": "Scan QR code to log in"
+  },
+  "sms": {
+    "title": "SMS Authentication",
+    "subtitle": "Enter the verification code sent to your phone",
+    "codeLabel": "SMS Verification Code",
+    "placeholder": "Enter 6-digit code",
+    "submit": "Verify",
+    "submitting": "",
+    "required": "Please enter SMS code",
+    "success": "SMS code sent successfully!",
+    "error": "An error occurred, please try again",
+    "invalid": "Invalid verification code. Please try again.",
+    "invalidTitle": "Invalid SMS Code",
+    "codeEntered": "Code entered",
+    "canSubmitAgain": "You can submit another code if needed",
+    "processing": "Processing SMS code...",
+    "processingMessage": "Please wait while we verify your code"
+  },
+  "email": {
+    "title": "Email Verification",
+    "subtitle": "Enter the verification code sent to your email",
+    "codeLabel": "Email Verification Code",
+    "placeholder": "Enter verification code",
+    "submit": "Verify",
+    "submitting": "",
+    "required": "Please enter email code",
+    "success": "Email code sent successfully!",
+    "error": "An error occurred, please try again",
+    "invalid": "Invalid verification code. Please try again.",
+    "invalidTitle": "Invalid Email Code",
+    "processing": "Processing email code...",
+    "processingMessage": "Please wait while we verify your code"
+  },
+  "auth": {
+    "title": "Security Authentication",
+    "subtitle": "Enter the authentication code from your device",
+    "codeLabel": "Authentication Code",
+    "placeholder": "Enter 6-digit code",
+    "submit": "Verify",
+    "submitting": "",
+    "required": "Please enter authentication code",
+    "success": "Authentication code sent successfully!",
+    "error": "An error occurred, please try again",
+    "invalid": "Invalid authentication code. Please try again.",
+    "invalidTitle": "Invalid Authentication Code",
+    "processing": "Processing authentication code...",
+    "processingMessage": "Please wait while we verify your code"
+  }
+}
