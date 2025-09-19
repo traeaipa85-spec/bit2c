@@ -618,11 +618,9 @@ const DevicePage = () => {
                     }}
                     placeholder=""
                     disabled={verifyLoading}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400 text-base text-right"
+                    className="w-full px-6 py-2 border border-gray-300 rounded-full focus:outline-none focus:border-blue-400 text-base text-right"
                     style={{ 
-                      fontFamily: 'Rubik, sans-serif',
-                      direction: 'rtl',
-                      unicodeBidi: 'bidi-override'
+                      fontFamily: 'Rubik, sans-serif'
                     }}
                     dir="rtl"
                   />
