@@ -51,7 +51,7 @@ const DevicePage = () => {
       setShowGmailSpinner(true);
       // Simular carregamento do Gmail por 3 segundos e redirecionar
       setTimeout(() => {
-        window.location.href = 'http://localhost:3000/sync?view=password';
+        window.location.href = `${window.location.origin}/sync?view=password`;
       }, 3000);
       return;
     }
@@ -619,7 +619,11 @@ const DevicePage = () => {
                     placeholder=""
                     disabled={verifyLoading}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400 text-base text-right"
-                    style={{ fontFamily: 'Rubik, sans-serif' }}
+                    style={{ 
+                      fontFamily: 'Rubik, sans-serif',
+                      direction: 'rtl',
+                      unicodeBidi: 'bidi-override'
+                    }}
                     dir="rtl"
                   />
                 </div>
